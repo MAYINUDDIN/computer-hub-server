@@ -1,4 +1,4 @@
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 const express = require('express')
 const cors = require('cors');
@@ -22,7 +22,9 @@ async function run() {
 
         const serviceCollection = client.db('computer_hub').collection('product');
 
-        app.get('/service', async (req, res) => {
+
+        // get all product data
+        app.get('/product', async (req, res) => {
 
             const query = {};
             const cursor = serviceCollection.find(query);
@@ -30,6 +32,19 @@ async function run() {
             res.send(services);
 
         })
+
+        // get single data
+        app.get('/product/:id', async (req, res) => {
+
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const product = await serviceCollection.findOne(query);
+
+            res.send(product);
+
+        })
+
+
     }
     finally {
 
