@@ -11,7 +11,7 @@ app.use(cors());
 app.use(express.json());
 
 
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.3jkph.mongodb.net/?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.mopz7.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
 function verifyJWT(req, res, net) {
@@ -32,7 +32,7 @@ function verifyJWT(req, res, net) {
 async function run() {
     try {
         await client.connect();
-        const productCollection = client.db("computer_hub").collection("product");
+        const productCollection = client.db("computer").collection("product");
         const orderCollection = client.db("computer_hub").collection("order");
         const reviewCollection = client.db("computer_hub").collection("review");
         const profileCollection = client.db("computer_hub").collection("profile");
