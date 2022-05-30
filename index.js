@@ -1,20 +1,18 @@
-const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
-const jwt = require('jsonwebtoken');
-const express = require('express')
+const express = require('express');
 const cors = require('cors');
-require('dotenv').config();
+const jwt = require('jsonwebtoken');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 5000;
+require('dotenv').config();
 
 // middleware
 app.use(cors());
 app.use(express.json());
 
+
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.3jkph.mongodb.net/?retryWrites=true&w=majority`;
-console.log(uri)
-
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-
 
 function verifyJWT(req, res, net) {
     const authHeader = req.headers.authorization;
@@ -31,18 +29,14 @@ function verifyJWT(req, res, net) {
     })
 }
 
-
-
 async function run() {
-
-
     try {
         await client.connect();
-        const productCollection = client.db('computer_hub').collection('product');
-        const orderCollection = client.db('computer_hub').collection("order");
-        const reviewCollection = client.db('computer_hub').collection("review");
-        const profileCollection = client.db('computer_hub').collection("profile");
-        const userCollection = client.db('computer_hub').collection("user");
+        const productCollection = client.db("computer_hub").collection("product");
+        const orderCollection = client.db("computer_hub").collection("order");
+        const reviewCollection = client.db("computer_hub").collection("review");
+        const profileCollection = client.db("computer_hub").collection("profile");
+        const userCollection = client.db("computer_hub").collection("user");
 
 
         // jasonwebtoken
@@ -132,26 +126,22 @@ async function run() {
         });
 
 
-        // get all product data
+        // read all products
         app.get('/product', async (req, res) => {
-
             const query = {};
             const cursor = productCollection.find(query);
-            const services = await cursor.toArray();
-            res.send(services);
+            const products = await cursor.toArray();
+            res.send(products);
+        });
 
-        })
-
-        // get single data
+        // Read single product
         app.get('/product/:id', async (req, res) => {
-
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const product = await productCollection.findOne(query);
-
             res.send(product);
+        });
 
-        })
 
         // Update quantity with previous quantity
         app.put('/product/:id', async (req, res) => {
@@ -228,8 +218,6 @@ async function run() {
             const result = await productCollection.deleteOne(query);
             res.send(result);
         });
-
-
     }
     finally {
 
@@ -238,11 +226,9 @@ async function run() {
 run().catch(console.dir)
 
 
-
 app.get('/', (req, res) => {
-    res.send('Hello from Computer Hub!')
-})
-
+    res.send('Hi !Computer Hub');
+});
 app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
-})
+    console.log('Listen to port', port);
+});
